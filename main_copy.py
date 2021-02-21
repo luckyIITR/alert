@@ -14,10 +14,9 @@ bot = telegram_chatbot("config.cfg")
 id = 965690681
 
 reported = []
-end_time = datetime(2021, 2, 2, 15, 30).time()
+end_time = datetime(2021,2,2,15,30).time()
 while True:
     alert_dic = {}
-
 
     def get_alert():
         df = pd.read_csv('alert_data.csv')
@@ -54,13 +53,12 @@ while True:
         #     print(df)
         return df
 
-
     df, symbols = get_alert()
 
-    df = get_LTP(df, symbols)
+    df = get_LTP(df,symbols)
     signal = df['LTP'] - df['Alert Price']
-    signal = signal.to_frame(name="signal")
-    alert_dic[datetime.now()] = list(signal[signal.signal > 0].index)
+    signal = signal.to_frame(name = "signal")
+    alert_dic[datetime.now()]  = list(signal[signal.signal>0].index)
 
     if alert_dic:
         reply = f"Price Alert !!!\n{list(alert_dic.keys())[0]}"
@@ -69,15 +67,15 @@ while True:
             if stock in reported:
                 continue
             flag = 1
-            reply = reply + "\n" + str(stock[:-3]) + "\n" + f"LTP : {round(df.loc[stock, 'LTP'], 2)}"
+            reply = reply + "\n" + str(stock[:-3]) +"\n" + f"LTP : {round(df.loc[stock,'LTP'],2)}"
             reported.append(stock)
-        if flag:
+        if flag :
             bot.send_message(reply, id)
         alert_dic = {}
     # time.sleep(30)
-    if datetime.now().time() > end_time:
+    if datetime.now().time() > end_time :
         break
-
+        
 
 
 
